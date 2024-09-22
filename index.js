@@ -13,9 +13,10 @@ const requestListener = (req, res) => {
             break;
         case '/data/1':
             res.setHeader('Content-Type', 'text/html')
-            res.end('Data 1')
+            res.end('<p>Data 1</p>')
             break;
         default:
+            res.end('<h1>404 NOT FOUND!</h1>')
             break;
     }
 }
