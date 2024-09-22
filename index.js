@@ -1,7 +1,12 @@
-const http = require('http')
-const url = require('url')
+import http from 'http'
+import queryString from 'query-string'
 
-const data = require('./data/data')
+import data from './data/data.js'
+
+
+////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+// BASE ROUTES
 
 const requestListener = (req, res) => {
     const { url } = req
@@ -10,13 +15,21 @@ const requestListener = (req, res) => {
 
     if (url === '/') {
         requestListenerOnRoot(req, res)
+    } else if (url === '/data') {
+        requestListenerOnData(req, res)
     } else if (dataPath.test(url)) {
         const params = url.match(dataPath)[1]
-        requestListenerOnData(req, res, params)
+        requestListenerOnDataWithId(req, res, params)
     } else {
         res.end('<h1>404 NOT FOUND!</h1>')
     }
 }
+
+
+
+////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+// SOME REQUEST LISTENER FOR SPECIFIC URL PATH
 
 function requestListenerOnRoot(req, res) {
     const { method } = req
@@ -35,7 +48,51 @@ function requestListenerOnRoot(req, res) {
     }
 }
 
-function requestListenerOnData(req, res, params) {
+function requestListenerOnData(req, res) {
+    const { method } = req
+
+    switch (method) {
+        case 'GET':
+            const stringResponse = `
+                <h1>Send data to server!</h1>
+                <p>Current data: ${data.length}</p>
+                <form action="/data" method="post">
+                    <input type="text" name="name" id="name-input" placeholder="Input name"> 
+                    <br>
+                    <input type="text" name="job" id="job-input" placeholder="Input job">
+                    <br>
+                    <button type="submit">Submit</button>
+                </form>
+            `
+            res.end(stringResponse)
+            break;
+        case 'POST':
+            let body = ''
+
+            req.on('data', chunk => {
+                body += chunk.toString()
+            })
+
+            req.on('end', () => {
+                const formData = queryString.parse(body)
+                data.push(formData)
+
+                res.writeHead(200, {'Content-Type' : 'text/html'})
+                const stringResponse = `
+                    <h1>Data successfully submitted to server</h1>
+                    <a href="/data">
+                        <button type="submit" >Submit data again</button>
+                    </a>
+                `
+                res.end(stringResponse)
+            })
+            break;
+        default:
+            break;
+    }
+}
+
+function requestListenerOnDataWithId(req, res, params) {
     const { method } = req
 
     switch (method) {
@@ -55,7 +112,7 @@ function requestListenerOnData(req, res, params) {
                 <p>Data: </p>
                 ${dataResult}
             `
-            
+
             res.end(stringResponse)
             break;
         case 'POST':
@@ -69,6 +126,7 @@ function requestListenerOnData(req, res, params) {
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
+// THE CORE CODE
 
 const server = http.createServer(requestListener)
 
