@@ -11,15 +11,15 @@ import data from './data/data.js'
 const requestListener = (req, res) => {
     const { url } = req
 
-    const dataPath = /^\/data\/(\d+)$/
+    const usersPath = /^\/users\/(\d+)$/
 
     if (url === '/') {
         requestListenerOnRoot(req, res)
-    } else if (url === '/data') {
-        requestListenerOnData(req, res)
-    } else if (dataPath.test(url)) {
-        const params = url.match(dataPath)[1]
-        requestListenerOnDataWithId(req, res, params)
+    } else if (url === '/users') {
+        requestListenerOnUsers(req, res)
+    } else if (usersPath.test(url)) {
+        const params = url.match(usersPath)[1]
+        requestListenerOnUsersWithId(req, res, params)
     } else {
         res.end('<h1>404 NOT FOUND!</h1>')
     }
@@ -48,15 +48,15 @@ function requestListenerOnRoot(req, res) {
     }
 }
 
-function requestListenerOnData(req, res) {
+function requestListenerOnUsers(req, res) {
     const { method } = req
 
     switch (method) {
         case 'GET':
             const stringResponse = `
-                <h1>Send data to server!</h1>
-                <p>Current data: ${data.length}</p>
-                <form action="/data" method="post">
+                <h1>Send user data to server!</h1>
+                <p>Current user: ${data.length}</p>
+                <form action="/users" method="post">
                     <input type="text" name="name" id="name-input" placeholder="Input name"> 
                     <br>
                     <input type="text" name="job" id="job-input" placeholder="Input job">
@@ -80,7 +80,7 @@ function requestListenerOnData(req, res) {
                 res.writeHead(200, {'Content-Type' : 'text/html'})
                 const stringResponse = `
                     <h1>Data successfully submitted to server</h1>
-                    <a href="/data">
+                    <a href="/users">
                         <button type="submit" >Submit data again</button>
                     </a>
                 `
@@ -92,7 +92,7 @@ function requestListenerOnData(req, res) {
     }
 }
 
-function requestListenerOnDataWithId(req, res, params) {
+function requestListenerOnUsersWithId(req, res, params) {
     const { method } = req
 
     switch (method) {
@@ -101,8 +101,8 @@ function requestListenerOnDataWithId(req, res, params) {
             if (params >= 1 && params <= data.length) {
                 dataResult = `
                     <ul>
-                        <li>Nama: ${data[params - 1].name}</li>
-                        <li>Pekerjaan: ${data[params - 1].job}</li>
+                        <li>Name: ${data[params - 1].name}</li>
+                        <li>Job: ${data[params - 1].job}</li>
                     </ul>
                 `
             }
