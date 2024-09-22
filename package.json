@@ -9,9 +9,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type":"module",
+  "type": "module",
   "description": "",
   "dependencies": {
     "query-string": "^9.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
   }
 }
