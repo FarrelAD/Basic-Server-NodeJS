@@ -11,6 +11,8 @@ function requestListenerOnRoot(req, res) {
             res.end(stringResponse)
             break;
         default:
+            res.writeHead(405, { 'Content-Type' : 'text/html' })
+            res.end('<h1>Method not allowed. Supported method: [GET]</h1>')
             break;
     }
 }

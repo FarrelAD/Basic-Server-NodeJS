@@ -46,6 +46,8 @@ function requestListenerOnUsers(req, res) {
             })
             break;
         default:
+            res.writeHead(405, { 'Content-Type' : 'text/html' })
+            res.end('<h1>Method not allowed. Supported method: [GET, POST]</h1>')
             break;
     }
 }
@@ -141,6 +143,8 @@ function requestListenerOnUsersWithId(req, res, params) {
             })
             break;
         default:
+            res.writeHead(405, { 'Content-Type' : 'text/html' })
+            res.end('<h1>Method not allowed. Supported method: [GET, PUT]</h1>')
             break;
     }
 }
