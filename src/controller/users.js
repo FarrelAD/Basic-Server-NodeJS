@@ -46,7 +46,7 @@ function requestListenerOnUsers(req, res) {
             })
             break;
         default:
-            res.writeHead(405, { 'Content-Type' : 'text/html' })
+            res.writeHead(405, { 'Content-Type': 'text/html' })
             res.end('<h1>Method not allowed. Supported method: [GET, POST]</h1>')
             break;
     }
@@ -55,6 +55,7 @@ function requestListenerOnUsers(req, res) {
 function requestListenerOnUsersWithId(req, res, params) {
     const { method } = req
     let stringResponse = ''
+    let body = null
 
     switch (method) {
         case 'GET':
@@ -63,21 +64,29 @@ function requestListenerOnUsersWithId(req, res, params) {
                 <br><br>
                 <div>
                     <h1>Update this user data!</h1>
-                    <form id="form">
+                    <form id="form-put">
                         <input type="text" name="new-name" id="new-name-input" placeholder="New name"> 
                         <br>
                         <input type="text" name="new-job" id="new-job-input" placeholder="New job">
                         <br>
                         <button type="submit">Submit</button>
                     </form>
+                    <br><br>
+                    <div>
+                        <h1>Delete this user data!</h1>
+                        <form id="form-delete">
+                            <button type="submit">Submit</button>
+                        </form>
+                    </div>
                 </div>
 
                 <script>
                     const newNameInput = document.getElementById('new-name-input')
                     const newJobInput = document.getElementById('new-job-input')
-                    const form = document.getElementById('form')
+                    const formPut = document.getElementById('form-put')
+                    const formDelete = document.getElementById('form-delete')
 
-                    form.addEventListener('submit', function(event) {
+                    formPut.addEventListener('submit', function(event) {
                         event.preventDefault()
 
                         fetch(\`http://localhost:5000/users/${params}\`, {
@@ -96,6 +105,26 @@ function requestListenerOnUsersWithId(req, res, params) {
                             location.reload()
                         })
                         .catch(error => console.error('Error:', error))
+                    })
+
+                    formDelete.addEventListener('submit', function(event) {
+                        event.preventDefault();
+
+                        fetch(\`http://localhost:5000/users/${params}\`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                id: ${params - 1}
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            alert('Data has been deleted successfully!')
+                            location.reload()
+                        })
+                        .catch(error => console.error('Error:', error));
                     })
                 </script>
             `
@@ -118,12 +147,12 @@ function requestListenerOnUsersWithId(req, res, params) {
             res.end(stringResponse)
             break;
         case 'PUT':
-            let body = ''
+            body = ''
 
             req.on('data', chunk => {
                 body += chunk.toString()
             })
-            
+
             req.on('end', () => {
                 try {
                     const newData = JSON.parse(body)
@@ -142,8 +171,32 @@ function requestListenerOnUsersWithId(req, res, params) {
                 }
             })
             break;
+        case 'DELETE':
+            body = ''
+
+            req.on('data', chunk => {
+                body += chunk.toString()
+            })
+
+            req.on('end', () => {
+                try {
+                    const deletedData = JSON.parse(body)
+                    // Delete data and update element index
+                    data.splice(deletedData.id, 1)
+
+                    res.writeHead(200, { 'Content-Type': 'application/json' })
+
+                    res.end(JSON.stringify({
+                        message: 'Resource deleted successfully'
+                    }))
+                } catch (error) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' })
+                    res.end(JSON.stringify({ error: 'Invalid JSON format' }))
+                }
+            })
+            break;
         default:
-            res.writeHead(405, { 'Content-Type' : 'text/html' })
+            res.writeHead(405, { 'Content-Type': 'text/html' })
             res.end('<h1>Method not allowed. Supported method: [GET, PUT]</h1>')
             break;
     }
