@@ -7,18 +7,21 @@ function requestListenerOnUsers(req, res) {
     switch (method) {
         case 'GET':
             res.setHeader('Content-Type', 'text/html')
+            let result = '<ol>'
+
+            data.forEach(x => {
+                result += `
+                    <li>
+                        <p>Name : ${x.name}</p>
+                        <p>Job : ${x.job}</p>
+                    </li>
+                `
+            })
+
+            result += '</ol>'
             const stringResponse = `
-                <div>
-                    <h1>Send user data to server!</h1>
-                    <p>Current user: ${data.length}</p>
-                    <form action="/users" method="post">
-                        <input type="text" name="name" id="name-input" placeholder="Input name"> 
-                        <br>
-                        <input type="text" name="job" id="job-input" placeholder="Input job">
-                        <br>
-                        <button type="submit">Submit</button>
-                    </form>
-                </div>
+                <h1>All Users Data</h1>
+                ${result}
             `
             res.end(stringResponse)
             break;
@@ -38,7 +41,7 @@ function requestListenerOnUsers(req, res) {
                 res.writeHead(200, { 'Content-Type': 'text/html' })
                 const stringResponse = `
                     <h1>Data successfully submitted to server</h1>
-                    <a href="/users">
+                    <a href="/">
                         <button type="submit" >Submit data again</button>
                     </a>
                 `

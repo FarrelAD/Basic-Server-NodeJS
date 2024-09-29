@@ -1,3 +1,5 @@
+import data from '../data/data.js'
+
 function requestListenerOnRoot(req, res) {
     const { method } = req
 
@@ -7,7 +9,18 @@ function requestListenerOnRoot(req, res) {
             const stringResponse = `
                 <h1>Welcome! You have successfully accessed the website!</h1>
                 <p>Current position: root</p>
-                <a href="/users">Send and get a single data</a>
+                <br><br>
+                <div>
+                    <h1>Send user data to server!</h1>
+                    <p>Current user: ${data.length}</p>
+                    <form action="/users" method="post">
+                        <input type="text" name="name" id="name-input" placeholder="Input name"> 
+                        <br>
+                        <input type="text" name="job" id="job-input" placeholder="Input job">
+                        <br>
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
                 <h1>Search something!</h1>
                 <form action="/search" method="get">
                     <input type="text" name="name" id="search-box-name" placeholder="Name">
