@@ -47,16 +47,17 @@ The server will be running at http://localhost:5000
 Here are the key endpoints that you can interact with:
 
 ```
-GET /: Returns a simple welcome message
-GET /users: Provide a simple form to submit data
-GET /users/:id: Fetch a data by their ID
-POST /users: Add a new user
-PUT /users/:id: Update user information
-DELETE /users/:id: Delete a user by their ID
+GET / : Returns a simple welcome message and provide simple form to handle request input
+GET /users : Fetch all users
+GET /users/:id : Fetch a data by their ID
+POST /users : Add a new user
+PUT /users/:id : Update user information
+DELETE /users/:id : Delete a user by their ID
+GET /search?name=&job= : Retrieves data based on user input from a search form, filtering results by name and job
 ```
 
 ## Query Parameters
-Example: /search?name=John&age=25
+Example: /search?name=John&job=data+analyst
 Query parameters can be extracted and used in request processing.
 
 ## HTTP Methods
@@ -84,11 +85,11 @@ The project is simple and has the following structure:
 ## Contributing
 Feel free to fork this repository and use it as a reference or make improvements! Contributions are welcome.
 
-Fork the repository.
-Create a new branch: git checkout -b feature-branch-name.
-Make your changes and commit: git commit -m 'Added some feature'.
-Push to the branch: git push origin feature-branch-name.
-Submit a pull request.
+1. Fork the repository.
+2. Create a new branch: `git checkout -b feature-branch-name`.
+3. Make your changes and commit: `git commit -m 'Added some feature'`.
+4. Push to the branch: `git push origin feature-branch-name`.
+5. Submit a pull request.
 
 ## License
 This project is licensed under the MIT License.
