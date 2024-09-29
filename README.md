@@ -48,7 +48,7 @@ Here are the key endpoints that you can interact with:
 
 ```
 GET /: Returns a simple welcome message
-GET /users: Fetch all users and provide a simple form to submit data
+GET /users: Provide a simple form to submit data
 GET /users/:id: Fetch a data by their ID
 POST /users: Add a new user
 PUT /users/:id: Update user information
